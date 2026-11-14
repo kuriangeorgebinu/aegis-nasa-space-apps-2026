@@ -28,11 +28,19 @@ crew member's health. AEGIS combines what they see to:
 3. **Protect** the crew with emergency protocols when something cannot be prevented, such as a solar storm;
 4. **Look after the person**, not just the readings: ECHO, a crew companion, checks in after an emergency.
 
-![AEGIS dashboard in its normal state](docs/screenshots/aegis-01-dashboard.png)
+### The 3D Cascade Map, captured from the live demo
 
-| Early warning: a cascade predicted before it happens | Radiation emergency: storm shelter for the whole crew |
+![AEGIS mission control with the 3D Cascade Map: all systems steady for Commander Chen](docs/screenshots/aegis-3d-01-dashboard.png)
+
+*Mission control on day 54 of a Mars transit: the 3D Cascade Map (the agents orbiting AEGIS) beside Live Vitals.*
+
+| Early warning: AEGIS forecasts the cascade, 2:33 before it forms | The cascade fires: every system out of range together |
 |---|---|
-| ![Cascade Map counting down to a predicted cascade](docs/screenshots/aegis-02-early-warning.png) | ![Radiation emergency, Cascade Map and the phone alarm](docs/screenshots/aegis-08-radiation-emergency.png) |
+| ![3D Cascade Map counting down 2:33 to a predicted cascade](docs/screenshots/aegis-3d-02b-early-warning-map.png) | ![3D Cascade Map in cascade: SOLARIS, GENE, PULSE and MIRROR all out of range](docs/screenshots/aegis-3d-03b-cascade-map.png) |
+
+*Real captures of https://13-219-198-186.sslip.io/ in 3D mode (the map can be switched to 2D). The readings in these
+screenshots are **simulated** from published NASA ranges and labelled **SIM** / **MODELLED** on the dashboard; no
+wearable hardware is connected.*
 
 ---
 
@@ -208,6 +216,9 @@ variables and secrets to be configured. The live demo is deployed from the worki
 - **Leo Tan**
 - **Muhammad Abdullah Nazeer**
 - **Midhat Maryam**
+
+**All four team members contributed to the project.** This submission copy was published to GitHub by one team
+member on the team's behalf, so the repository owner and commit author do not reflect who did the work.
 
 ## License
 
