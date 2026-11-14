@@ -1,0 +1,39 @@
+﻿# Secrets and local configuration (never commit)
+.env
+extension_token.txt
+claude_desktop_config.json
+
+# Python / virtual environment
+.venv/
+__pycache__/
+*.pyc
+
+# Runtime data (recreated automatically on first run)
+aegis.db
+aegis.db.bak
+*.db-journal
+
+# Logs and local backups
+*.log
+*.err
+*.bak
+*.bak-*
+
+# Evaluation scratch (backups, dumps and one-off build helpers)
+eval/chroma_db_backup/
+eval/*.before-*.html
+eval/dump.txt
+eval/part_c.py.txt
+eval/splice.py
+
+# Terraform (state lives in S3)
+infra/terraform/.terraform/
+infra/terraform/*.tfstate*
+infra/terraform/.terraform.lock.hcl
+
+# Cached neural-voice audio
+tts_cache/
+
+# Other IDE and others
+.vscode/
+chroma_db/
