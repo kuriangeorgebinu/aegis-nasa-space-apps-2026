@@ -306,7 +306,7 @@ class BaseAgent:
         check = aegis_verify.verify_note(text, context, menu=[alert.message or "", alert.title])
         if check["ok"]:
             db.update_alert_message(alert.id, f"{alert.message}\n\n{aegis_llm.AI_MARKER} ({self.agent_type.value}): {text}")
-        self._log_analysis(f"DeepSeek assessment {'added to' if check['ok'] else 'rejected for'} alert {alert.id}",
+        self._log_analysis(f"Model assessment {'added to' if check['ok'] else 'rejected for'} alert {alert.id}",
                            {"model": aegis_llm.model(), "alert_id": alert.id, "verified": check["ok"],
                             "problems": check["problems"][:4]})
 
@@ -1294,7 +1294,7 @@ class AEGISAgent(BaseAgent):
             paged = self.page_from_chat(q_safe, member)
             if paged:
                 return {"answer": paged["answer"], "agent": "AEGIS", "crew_member_id": member.id,
-                        "source": "deepseek" if paged["call"]["source"] != "rules" else "rules",
+                        "source": "model" if paged["call"]["source"] != "rules" else "rules",
                         "model": aegis_llm.model(), "agents_consulted": [], "findings": [],
                         "call": {k: paged["call"][k] for k in ("status", "detail", "source", "at")},
                         "latency_s": round(time.time() - t0, 2)}
@@ -1382,7 +1382,7 @@ class AEGISAgent(BaseAgent):
             "If you don't have the data for it, say so simply and share what you do know."
         )
         answer = aegis_llm.chat(prompt, persona=agent_name, words=60, mode="chat", timeout=20)   # 20 s total, retries included
-        source = "deepseek"
+        source = "model"
         # Grounding: every number in a spoken answer must come from the data in the prompt (aegis_verify).
         num_check, first_check = None, None
         # Also: only whitelisted units, and no medicine or dose that is not in the data given to the model.
@@ -1428,10 +1428,10 @@ class AEGISAgent(BaseAgent):
             "agent": agent_name,
             "crew_member_id": member.id,
             "source": source,
-            "model": aegis_llm.model() if source == "deepseek" else None,
+            "model": aegis_llm.model() if source == "model" else None,
             "agents_consulted": consulted,
             "findings": [f.get("message") for f in findings],
-            "numbers_verified": bool(num_check and num_check["ok"]) if source == "deepseek" else None,
+            "numbers_verified": bool(num_check and num_check["ok"]) if source == "model" else None,
             "latency_s": round(time.time() - t0, 2),
             **({"_context": prompt, "_first_check": first_check} if return_context else {}),
         }
@@ -1550,7 +1550,7 @@ class AEGISAgent(BaseAgent):
                 "crew should do first. This is a hypothetical scenario, not a live reading."
             )
             explanation = aegis_llm.chat(prompt, persona="AEGIS", words=50)
-            source = "deepseek" if explanation else "rules"
+            source = "model" if explanation else "rules"
         return {
             "crew_member_id": base.id, "agents": per_agent, "out_of_range": sorted(out_of_range),
             "verdict": verdict, "protocol": protocol, "summary": summary,
@@ -1578,7 +1578,7 @@ class AEGISAgent(BaseAgent):
             if aegis_llm.submit(spec.llm_enrich_recommendation, member, rec, findings):
                 queued += 1
         if queued:
-            self._log_analysis(f"DeepSeek backfill queued for {queued} recommendations", {"queued": queued})
+            self._log_analysis(f"Model backfill queued for {queued} recommendations", {"queued": queued})
         return queued
 
     def _specialist_for(self, agent_type) -> "BaseAgent":
@@ -1615,7 +1615,7 @@ class AEGISAgent(BaseAgent):
         check = aegis_verify.verify_note(text, context, menu=menu)
         if check["ok"]:
             db.update_alert_message(alert.id, f"{alert.message}\n\n{aegis_llm.AI_MARKER} (AEGIS): {text}")
-        self._log_analysis(f"DeepSeek cascade explanation {'added to' if check['ok'] else 'rejected for'} {alert.id}",
+        self._log_analysis(f"Model cascade explanation {'added to' if check['ok'] else 'rejected for'} {alert.id}",
                            {"model": aegis_llm.model(), "alert_id": alert.id, "verified": check["ok"],
                             "problems": check["problems"][:4]})
 
@@ -1700,7 +1700,7 @@ class AEGISAgent(BaseAgent):
                                          ["Start the prevention plan PREVENT-1"])
         if check["ok"]:
             aegis_trends.NOTES[crew_member.id] = {"text": text, "at": datetime.utcnow().isoformat()}
-        self._log_analysis(f"DeepSeek PREDICT note for {crew_member.id} {'added' if check['ok'] else 'rejected'}",
+        self._log_analysis(f"Model PREDICT note for {crew_member.id} {'added' if check['ok'] else 'rejected'}",
                            {"chars": len(text), "verified": check["ok"], "problems": check["problems"][:4]})
 
     def rearm_cascades(self):
